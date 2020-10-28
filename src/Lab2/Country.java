@@ -6,17 +6,21 @@ public class Country implements Comparable<Country>{
     private float m_total = 0;
     private float m_national = 0;
 
-    public Country()
-    {
-
-    }
-
     public Country(String name, int num, float total, float national)
     {
         m_name = name;
         m_num = num;
         m_total = total;
         m_national = national;
+    }
+
+    @Override //ключевое слово, которое позволяет в дочернем классе заново создать реализацию метода родительского класса.
+    public int compareTo(Country other)
+    {
+        float res = other.m_national - this.m_national;
+        if (res < 0) return -1;
+        else if(res > 0) return 1;
+        else return 0;
     }
 
     public void setName(String name)
@@ -59,21 +63,4 @@ public class Country implements Comparable<Country>{
         return m_national;
     }
 
-    @Override
-    public int compareTo(Country other)
-    {
-        float res = other.m_national - this.m_national;
-        if (res < 0)
-        {
-            return -1;
-        }
-        else if(res > 0)
-        {
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
-    }
 }

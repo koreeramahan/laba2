@@ -1,9 +1,9 @@
 import Lab2.*;
 
-import java.io.FileReader;
+import java.io.FileReader; //для считывания из файла
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collections; //для сортировки
 import java.util.LinkedList;
 
 public class Main {
@@ -11,17 +11,14 @@ public class Main {
     public static void main(String[] args) {
         LinkedList<Country> countries = new LinkedList<>();
         String buff = "";
-
+        //считываем информацию из текстового файла
         try (FileReader in = new FileReader("C:\\Users\\ASUS\\Desktop\\7сем\\тп\\lab2.txt"))
         {
-            int val;
-            while ((val = in.read()) != -1)
+            int r;
+            while ((r = in.read())!=-1)
             {
-                if ((char)val == ',')
-                {
-                    continue;
-                }
-                buff += (char)val;
+                if ((char)r==',') continue;
+                buff+=(char)r;
             }
         }
         catch(IOException ex)
@@ -30,49 +27,45 @@ public class Main {
         }
 
         String[] line = buff.split("\n");
+        //заполняем таблицу
         for (int i = 0; i < line.length; i++)
         {
-            String[] cell = line[i].split("\t");
-            if (cell.length != 4)
+            String[] str = line[i].split("\t");
+            if (str.length != 4) //4 колонки для таблицы
             {
                 continue;
             }
-
-            String name = cell[0];
-            int num = Integer.parseInt(cell[1]);
-            float total = Float.parseFloat(cell[2]);
-            float national = Float.parseFloat(cell[3]);
-
+            String name = str[0]; //название страны
+            int num = Integer.parseInt(str[1]); //число иммигрантов
+            float total = Float.parseFloat(str[2]); //процент в мире
+            float national = Float.parseFloat(str[3]); //процент от населения
             Country country = new Country(name, num, total, national);
             countries.add(country);
         }
-
-        Collections.sort(countries);
-
-        int val1 = 0;
-        float val2 = 0;
+        Collections.sort(countries); //отсортировать по кол-ву в процентах от населения
+        int a = 0;
+        float b = 0;
         ArrayList<Integer> totalNum = new ArrayList<>(countries.size());
-
-        System.out.printf("%-25s%-20s%-15s%-15s%n", "Название", "Число иммигрантов", "Общий процент", "Процент от населения");
+        //выводим заголовки таблицы
+        System.out.printf("%-22s%-12s%-15s%-15s%n", "Country", "Immigrants", "% world total", "% population");
+        //считаем и выводим данные таблицы
         for (Country country : countries)
         {
-            String name = country.getName();
-            int num = country.getNum();
-            float total = country.getTotal();
-            float national = country.getNational();
-            System.out.printf("%-25s%-20s%-15s%-15s%n", name, num, total, national);
-
-            val1 += num;
-            val2 += total;
-            totalNum.add((int)Math.round(num * 100.0 / national));
+            String name = country.getName(); //название страны
+            int num = country.getNum(); //число иммигрантов
+            float total = country.getTotal(); //процент в мире
+            float national = country.getNational(); //процент от населения
+            System.out.printf("%-22s%-12s%-15s%-15s%n",name,num,total,national); //выводим в таблицу
+            a += num;
+            b += total;
+            totalNum.add((int)Math.round(num*100.0/national)); //считаем total population для последнего пункта
         }
-
         System.out.println();
-        System.out.println("Общее количество иммигрантов: " + Integer.toString(val1));
-        System.out.println("Общий процент иммигрантов: " + Float.toString(val2));
-        System.out.println("Страна с самым большим процентом иммигрантов: " + countries.get(0).getName());
-        System.out.println("Страна с самым маленьким процентом иммигрантов: " + countries.get(countries.size()-1).getName());
-        System.out.println("Общая численность населения:");
+        System.out.println("Total immigrants: " + Integer.toString(a));
+        System.out.println("Total percentage of world's immigrants: " + Float.toString(b));
+        System.out.println("Country with least immigration: " + countries.get(0).getName());
+        System.out.println("Country with greatest immigration: " + countries.get(countries.size()-1).getName());
+        System.out.println("Total estimated population of all countries:");
         for (int i = 0; i < countries.size(); i++)
         {
             System.out.println(countries.get(i).getName() + ": " + Integer.toString(totalNum.get(i)));
